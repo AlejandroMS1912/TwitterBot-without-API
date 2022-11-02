@@ -4,9 +4,17 @@ A couple of Python scripts to follow, unfollow and drop likes and retweets autom
 ### - Twitter account
 [Create a new account](https://twitter.com/i/flow/signup) or use your own
 ### - [Python](https://www.python.org/)
-### - The Selenium-python library
+### - Selenium-python library
 ```
 pip install selenium
+```
+### - time-python library
+```
+pip install time
+```
+### - random-python library
+```
+pip install random
 ```
 ### - [Chrome driver](https://chromedriver.chromium.org/downloads)
 - Check your Chrome version
