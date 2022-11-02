@@ -86,6 +86,6 @@ class TwitterBot:
             time.sleep(2)
 
 
-UserParameters = TwitterBot('Jaula5Estrellas', 'Alex24200')
+UserParameters = TwitterBot('Probando2847', 'Hello01134') # ('username', 'password')
 UserParameters.login()
-UserParameters.RTandLIKE_from_hashtag('drop handles')
+UserParameters.RTandLIKE_from_hashtag('drop handles') # ('hashtag')
