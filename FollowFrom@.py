@@ -88,6 +88,6 @@ class TwitterBot:
                 cont_follows = 0
                 time.sleep(1200)
                 
-UserParameters = TwitterBot('Probando229', 'pepito3pepito3')
+UserParameters = TwitterBot('YourUsername', 'YourPassword')
 UserParameters.login()
-UserParameters.follow_from_user('Banky__moon')
+UserParameters.follow_from_user('Cristiano')
