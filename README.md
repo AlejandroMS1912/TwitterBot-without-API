@@ -22,7 +22,8 @@ First step             |  Second step
 
 **When you have already installed the chromedriver.exe copy it to the TwitterBot scripts folder in Visual Studio Code and you can start running it**
 
-**REMEMBER THAT YOU HAVE TO SPECIFY THE PATH OF THE chromedriver.exe IN EACH OF THE SCRIPTS**
+> **Warning**
+> REMEMBER THAT YOU HAVE TO SPECIFY THE PATH OF THE chromedriver.exe IN EACH OF THE SCRIPTS
 
 ## How do it works?
 
@@ -31,4 +32,5 @@ This repository is divided into 4 folders ([FollowScripts](https://github.com/Al
 
 We can introduce a username (ex. 'elonmusk') so that the bot goes directly to his profile and starts executing the action (Follow his followers or like and retweet his tweets) or we can also introduce a hashtag/keyword (ex. 'drop handles') as an index to execute the action (Like and retweet the tweets founded in that hashtag or start following the followers of each of the users who have tweeted that hashtag/keyword)
 
-**Obiusly the UnfollowScript only can use as input your own username**
+> **Note**
+> *Obiusly the UnfollowScript only can use as input your own username*
