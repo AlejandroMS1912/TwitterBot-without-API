@@ -8,11 +8,11 @@ A couple of Python scripts to follow, unfollow and drop likes and retweets autom
 ```
 pip install selenium
 ```
-### - time-python library
+### - Python-time library
 ```
-pip install time
+pip install python-time
 ```
-### - random-python library
+### - Random-python library
 ```
 pip install random
 ```
