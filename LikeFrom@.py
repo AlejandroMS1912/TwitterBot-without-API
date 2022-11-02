@@ -89,6 +89,6 @@ class TwitterBot:
             time.sleep(2)
 
 
-UserParameters = TwitterBot('Probando229', 'pepito3pepito3')
+UserParameters = TwitterBot('Probando2847', 'Hello01134') # ('username', 'password')
 UserParameters.login()
-UserParameters.Like_from_user('Banky__moon')
+UserParameters.Like_from_user('Cristiano') # ('username')
