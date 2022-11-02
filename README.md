@@ -22,7 +22,7 @@ First step             |  Second step
 
 **When you have already installed the chromedriver.exe copy it to the TwitterBot scripts folder in Visual Studio Code and you can start running it**
 
-**REMEMBER THAT YOY HAVE TO SPECIFY THE PATH OF THE chromedriver.exe IN EACH OF THE SCRIPTS**
+**REMEMBER THAT YOU HAVE TO SPECIFY THE PATH OF THE chromedriver.exe IN EACH OF THE SCRIPTS**
 
 ## How do it works?
 
