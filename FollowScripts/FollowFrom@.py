@@ -13,8 +13,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(
-            executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe')
+        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe') # WARNING: Write your own path
 
     def login(self):
         '''
