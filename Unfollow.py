@@ -92,4 +92,4 @@ class TwitterBot:
                 
 UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
 UserParameters.login()
-UserParameters.follow('Probando2847') # Your ('username')
+UserParameters.unfollow('Probando2847') # Your ('username')
