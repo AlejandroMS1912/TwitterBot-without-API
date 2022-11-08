@@ -29,7 +29,7 @@ class TwitterBot:
         self.username = username
         self.password = password
         self.bot = webdriver.Chrome(
-            executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe')
+            executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe')  # Copy YOUR chromedriver path
 
     def login(self):
         '''
@@ -111,12 +111,12 @@ class TwitterBot:
                     rtButton = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
                     webdriver.ActionChains(bot).move_to_element(rtButton).click(rtButton).perform()
 
-                    if count_retweets <= 19:
+                    if count_retweets <= (20 - 1):
                         count_retweets += 1
                         print("You have " + str(count_retweets) + " consecutive retweets, " + str(20 - count_retweets) + " left for the next break (5 min)")
                         time.sleep(random.randint(10,20))
 
-                    if count_retweets > 19:
+                    if count_retweets > (20 - 1):
                         print("You have 20 consecutive retweets, its time to stop (5 min)")
                         time.sleep(5*60)
                         count_retweets = 0
