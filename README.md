@@ -50,6 +50,9 @@ Acoording to the [Twitter privacy policy](https://help.twitter.com/en/using-twit
 - **You can only follow 5000 accounts**. Once you reach that number, you may need to wait until your account has more followers before you can follow additional accounts.
 - You should not spam constantly follows or unfollows. The number of follows/unfollows that you can do continuosly is limited and it is recommended make an step of a few seconds between each follow/unfollow. The cooldowns that are usually been used are **series of 20/30 follows with a break of 10 minutes each one of them and a interval of 3/15 seconds between each follow/unfollow.**
 
+
+
 > **Note**
 > **This bot uses random intervals of time each follow with the goal of appearing as natural as possible against Twitter's ban systems. You can modify all of these intervals to fit your needs.**
 
+In short, this bot uses an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems. This is very useful because you can get interactions back from your target keyword
