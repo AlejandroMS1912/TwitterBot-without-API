@@ -125,21 +125,22 @@ class TwitterBot:
             try:
                 webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
                 print("You have followed ", n)
+                time.sleep(2)
+
+                if count_follows <= (20 - 1):
+                    count_follows += 1
+                    print("You have " + str(count_follows) + " consecutive follows, " 
+                        + str(20 - count_follows) + " left for the next break (20 min)")
+                    time.sleep(random.randint(6,30))
+
+
+                if count_follows > (20 - 1):
+                    print("You have 20 consecutive follows, its time to stop (20 min)")
+                    count_follows = 0
+                    time.sleep(10*60)
+
             except NoSuchElementException:
                 continue
-            time.sleep(2)
-
-            if count_follows <= (20 - 1):
-                count_follows += 1
-                print("You have " + str(count_follows) + " consecutive follows, " 
-                        + str(20 - count_follows) + " left for the next break (20 min)")
-                time.sleep(random.randint(6,30))
-
-
-            if count_follows > (20 - 1):
-                print("You have 20 consecutive follows, its time to stop (20 min)")
-                count_follows = 0
-                time.sleep(10*60)
                 
 
 UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
