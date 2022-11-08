@@ -130,6 +130,6 @@ class TwitterBot:
 
 
 
-UserParameters = TwitterBot('Probando2847', 'Hello01134') # ('username', 'password')
+UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
 UserParameters.login()
 UserParameters.Retweet(inputVariable, user, hashtag)
