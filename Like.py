@@ -114,4 +114,4 @@ class TwitterBot:
 
 UserParameters = TwitterBot('Probando2847', 'Hello01134') # ('username', 'password')
 UserParameters.login()
-UserParameters.follow_from_user('Cristiano') # ('username')
+UserParameters.likeTweets(inputVariable, user, hashtag)
