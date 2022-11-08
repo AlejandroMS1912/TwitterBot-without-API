@@ -2,7 +2,7 @@
 
 A few of scripts that use an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems.
 
-It works with a chrome driver and his python library *Selenium-python*. 
+**It works just with a chrome driver and his python library *Selenium-python*.**
 
 **Without API/Tweepy**
 
