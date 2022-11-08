@@ -61,6 +61,9 @@ Acoording to the [Twitter privacy policy](https://help.twitter.com/en/using-twit
 > **Note**
 > **This bot uses random intervals of time each follow with the goal of appearing as natural as possible against Twitter's ban systems. You can modify all of these intervals to fit your needs.**
 
+## Conclusion
 
 
-### In short, this bot uses an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems. This is very useful because you can get interactions back from your target keyword
+In resume, this bot uses an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems. This is very useful because you can get interactions back from your target keyword.
+
+The fact of not using the Twitter API makes the bot's actions much more difficult to detect for the application's tracking systems.
