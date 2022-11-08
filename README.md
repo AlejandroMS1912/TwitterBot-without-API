@@ -42,3 +42,14 @@ We can introduce a username (ex. 'elonmusk') so that the bot goes directly to hi
 
 > **Note**
 > *Obiusly the UnfollowScript only can use as input your own username*
+
+## How to avoid Twitter bans?
+
+Acoording to the [Twitter privacy policy](https://help.twitter.com/en/using-twitter/twitter-follow-limit), the number of accounts you can follow is not limitited in fact, but there are some conditions about the pace as wich you can do so:
+- **The maximum number of accounts you can follow in a day is 400**. Verified Twitter accounts are able to follow up to 1,000 accounts per day.
+- **You can only follow 5000 accounts**. Once you reach that number, you may need to wait until your account has more followers before you can follow additional accounts.
+- You should not spam constantly follows or unfollows. The number of follows/unfollows that you can do continuosly is limited and it is recommended make an step of a few seconds between each follow/unfollow. The cooldowns that are usually been used are **series of 20/30 follows with a break of 10 minutes each one of them and a interval of 3/15 seconds between each follow/unfollow.**
+
+> **Note**
+> **This bot uses random intervals of time each follow with the goal of appearing as natural as possible against Twitter's ban systems. You can modify all of these intervals to fit your needs.**
+
