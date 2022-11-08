@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
@@ -69,25 +70,29 @@ class TwitterBot:
         for n in cleaned_usernames_list:
                    
             time.sleep(2)
-            unfollows_b = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
-            webdriver.ActionChains(bot).move_to_element(unfollows_b).click(unfollows_b).perform()
+            unfollow_button = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
+            webdriver.ActionChains(bot).move_to_element(unfollow_button).click(unfollow_button).perform()
             time.sleep(1)
-            unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
-            unfollows_b_confirm.click()
-            print("You have unfollowed ", n)
-            time.sleep(2)
+            try:
+                unfollow_button_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
+                unfollow_button_confirm.click()
+                print("You have unfollowed ", n)
+                time.sleep(2)
 
-            if count_unfollows <= (20 - 1):
-                count_unfollows += 1
-                print("You have " + str(count_unfollows) + " consecutive unfollows, " 
+                if count_unfollows <= (20 - 1):
+                    count_unfollows += 1
+                    print("You have " + str(count_unfollows) + " consecutive unfollows, " 
                         + str(20 - count_unfollows) + " left for the next break (20 min)")
-                time.sleep(random.randint(6,30))
+                    time.sleep(random.randint(6,30))
 
 
-            if count_unfollows > (20 - 1):
-                print("You have 20 consecutive unfollows, its time to stop (20 min)")
-                count_unfollows = 0
-                time.sleep(10*60)
+                if count_unfollows > (20 - 1):
+                    print("You have 20 consecutive unfollows, its time to stop (20 min)")
+                    count_unfollows = 0
+                    time.sleep(10*60)
+                    
+            except NoSuchElementException:
+                continue
                 
 UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
 UserParameters.login()
