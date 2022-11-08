@@ -121,10 +121,11 @@ class TwitterBot:
         for n in cleaned_usernames_list:
                    
             time.sleep(2)
-            follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
             try:
+                follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
                 webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
                 print("You have followed ", n)
+                
                 time.sleep(2)
 
                 if count_follows <= (20 - 1):
@@ -135,9 +136,9 @@ class TwitterBot:
 
 
                 if count_follows > (20 - 1):
-                    print("You have 20 consecutive follows, its time to stop (20 min)")
+                    print("You have 15 consecutive follows, its time to stop (20 min)")
                     count_follows = 0
-                    time.sleep(10*60)
+                    time.sleep(20*60)
 
             except NoSuchElementException:
                 continue
