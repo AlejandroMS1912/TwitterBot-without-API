@@ -1,5 +1,7 @@
 # TwitterBot without API
-A couple of Python scripts to follow, unfollow and drop likes and retweets automathicaly without API, just with a chrome dirver and the Selenium-python library.
+
+A few of scripts that use an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems. It works with a chrome driver and his python library *Selenium-python*. **WITHOUT API/Tweepy-python**
+
 ## What do you need to start using the TwitterBot?
 ### - Twitter account
 [Create a new account](https://twitter.com/i/flow/signup) or use your own
