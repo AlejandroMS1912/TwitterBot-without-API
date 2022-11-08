@@ -107,8 +107,8 @@ class TwitterBot:
                     rtButton = bot.find_element("xpath", '//div[@data-testid="retweet"]')   
                     webdriver.ActionChains(bot).move_to_element(rtButton).click(rtButton).perform()
                     time.sleep(2)
-                    rtButton = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
-                    webdriver.ActionChains(bot).move_to_element(rtButton).click(rtButton).perform()
+                    rtButtonConfirm = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
+                    webdriver.ActionChains(bot).move_to_element(rtButtonConfirm).click(rtButtonConfirm).perform()
 
                     if count_retweets <= (20 - 1):
                         count_retweets += 1
