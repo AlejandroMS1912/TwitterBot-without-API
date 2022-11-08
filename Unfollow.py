@@ -1,4 +1,3 @@
-from lib2to3.pgen2 import driver
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -91,6 +90,6 @@ class TwitterBot:
                 count_unfollows = 0
                 time.sleep(10*60)
                 
-UserParameters = TwitterBot('Probando229', 'pepito3pepito3')
+UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
 UserParameters.login()
-UserParameters.unfollow('Probando229')
+UserParameters.follow('Probando2847') # Your ('username')
