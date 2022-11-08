@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
@@ -124,7 +125,7 @@ class TwitterBot:
             try:
                 webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
                 print("You have followed ", n)
-            except selenium.common.exceptions.NoSuchElementException:
+            except NoSuchElementException:
                 continue
             time.sleep(2)
 
