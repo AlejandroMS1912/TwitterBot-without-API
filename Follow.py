@@ -121,8 +121,11 @@ class TwitterBot:
                    
             time.sleep(2)
             follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
-            webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
-            print("You have followed ", n)
+            try:
+                webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
+                print("You have followed ", n)
+            except selenium.common.exceptions.NoSuchElementException:
+                continue
             time.sleep(2)
 
             if count_follows <= (20 - 1):
