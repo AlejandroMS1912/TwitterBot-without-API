@@ -78,14 +78,14 @@ class TwitterBot:
             print("You have unfollowed ", n)
             time.sleep(2)
 
-            if count_unfollows <= 19:
+            if count_unfollows <= (20 - 1):
                 count_unfollows += 1
                 print("You have " + str(count_unfollows) + " consecutive unfollows, " 
                         + str(20 - count_unfollows) + " left for the next break (20 min)")
                 time.sleep(random.randint(6,30))
 
 
-            if count_unfollows > 19:
+            if count_unfollows > (20 - 1):
                 print("You have 20 consecutive unfollows, its time to stop (20 min)")
                 count_unfollows = 0
                 time.sleep(10*60)
