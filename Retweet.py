@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import StaleElementReferenceException
 import time
 import random
 
@@ -28,7 +29,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe')  # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
 
     def login(self):
         '''
@@ -50,16 +51,63 @@ class TwitterBot:
         password.send_keys(Keys.RETURN)
         time.sleep(3)
 
-    def Retweet(self, inputVariable, user, hashtag):
+    def start_RT(self):
+        '''
+        This method works in the inputed page determined in the next method (where_to_RT()) and in that page, after a quick 
+        scroll, it detects all the RT buttons and store's them in a list.
+
+        Then it starts clicking each of them and his "confirmRetweet" button with the cooldown parameters established to control the
+        number of retweets and to make it in the most natural way posible in order to avoid possible bans.
+        
+        This is fully explained in the README file.
+        '''
+        bot = self.bot
+
+        ############################################# - Fit the parameters to your needs - ###############################################################
+
+        num_RTs = 30 # Max. number of retweets of each serie (Recommended: 30)
+        minutes = 5 # Cooldown between series of retweets (Recommended: 5)
+        interval_min, interval_max = (6,18) # Min. and Max. number of seconds of a random interval - Cooldown between each RT (Recommended: (6,18))
+
+        ##################################################################################################################################################
+        
+        count_retweets = 0 # DO NOT CHANGE - Always has to be 0
+
+        time.sleep(3)
+        for i in range(1, 1000):
+            bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            time.sleep(2)
+            rtButton_list = bot.find_elements("xpath", '//div[@role="button" and @data-testid="retweet"]')             
+            print("Tweets to Retweet: (", (len(rtButton_list)), ")")
+            for rtButton in rtButton_list:
+                try:
+                    webdriver.ActionChains(bot).move_to_element(rtButton).click(rtButton).perform()
+                    time.sleep(2)
+                    rtButtonConfirm = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
+                    webdriver.ActionChains(bot).move_to_element(rtButtonConfirm).click(rtButtonConfirm).perform()
+
+                    if count_retweets <= (num_RTs - 1):
+                        count_retweets += 1
+                        print("You have " + str(count_retweets) + " consecutive retweets, " + str(num_RTs - count_retweets) + " left for the next break (" + str(minutes) + " min)")
+                        time.sleep(random.randint(interval_min,interval_max))
+
+                    if count_retweets > (num_RTs - 1):
+                        print("You have " + str(num_RTs) +" consecutive retweets, its time to stop (" + str(minutes) + " min)")
+                        time.sleep(minutes*60)
+                        count_retweets = 0
+                except StaleElementReferenceException:
+                    continue
+
+
+    def where_to_RT(self, inputVariable, user, hashtag):
         '''
         This method firstly reject the cookies pop-up to avoid future click problems, then there are two options:
 
-        - If the command was "username", it search's the user inputed profile page.
-        - If the command was "hashtag", it search the inputed hashtag page.
-        
-        After a quick scroll in that page it detects all the tweets and store them in a list, then it start's liking and retweet each
-        of them with the cooldown parameters established to control the number of likes and retweets and to make it in the most natural
-        way posible in order to avoid possible bans. This is fully explained in the github documentation.
+        - If the command was "username", it goes to the user inputed profile page to start the retweeting process explained in
+        the previous method (start_RT())
+
+        - If the command was "hashtag", it goes to the inputed hashtag page to start the retweeting process explained in
+        the previous method (start_RT())
         '''
         bot = self.bot
 
@@ -67,68 +115,13 @@ class TwitterBot:
         RejectCookies.click()
 
         if inputVariable == "username":
-
             bot.get("https://twitter.com/" + user)
+            self.start_RT()
 
         if inputVariable == "hashtag":
             bot.get("https://twitter.com/search?q=" + hashtag + "&src=typed_query")
+            self.start_RT()
 
-        time.sleep(3)
-        for i in range(1, 3):
-            bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-            time.sleep(2)
-
-        count_retweets = 0
-
-        tweets = bot.find_elements("xpath", '//a[@dir="auto" and not(@rel)]')
-        tweets_url = [tweet.get_attribute('href') for tweet in tweets]
-        print("Tweets to RT and Like: (", (len(tweets_url) - 3), ")",  tweets_url)
-
-        for url in tweets_url:
-        
-            bot.get(url)
-            try:
-                time.sleep(1)
-                if url == 'https://twitter.com/i/keyboard_shortcuts':
-                    continue
-                    
-                if url== "https://twitter.com/" + user + "/following":
-                    continue
-                
-                if url== "https://twitter.com/" + user + "/followers":
-                    continue
-                 
-                else:
-                    time.sleep(2)
-                    likeButton = bot.find_element("xpath", '//div[@data-testid="like"]')   
-                    webdriver.ActionChains(bot).move_to_element(likeButton).click(likeButton).perform()
-                    time.sleep(1)
-
-                    rtButton = bot.find_element("xpath", '//div[@data-testid="retweet"]')   
-                    webdriver.ActionChains(bot).move_to_element(rtButton).click(rtButton).perform()
-                    time.sleep(2)
-                    rtButtonConfirm = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
-                    webdriver.ActionChains(bot).move_to_element(rtButtonConfirm).click(rtButtonConfirm).perform()
-
-                    if count_retweets <= (20 - 1):
-                        count_retweets += 1
-                        print("You have " + str(count_retweets) + " consecutive retweets, " + str(20 - count_retweets) + " left for the next break (5 min)")
-                        time.sleep(random.randint(10,20))
-
-                    if count_retweets > (20 - 1):
-                        print("You have 20 consecutive retweets, its time to stop (5 min)")
-                        time.sleep(5*60)
-                        count_retweets = 0
-
-            except Exception as ex:
-                print(ex)
-                print(url + " is already liked and retweeted")
-                time.sleep(random.randint(2,5))
-
-            time.sleep(2)
-
-
-
-UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
+UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
 UserParameters.login()
-UserParameters.Retweet(inputVariable, user, hashtag)
+UserParameters.where_to_RT(inputVariable, user, hashtag)
