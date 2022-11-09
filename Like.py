@@ -1,6 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import StaleElementReferenceException
 import time
 import random
 
@@ -28,7 +29,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe') # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
 
     def login(self):
         '''
@@ -50,68 +51,73 @@ class TwitterBot:
         password.send_keys(Keys.RETURN)
         time.sleep(3)
 
-    def likeTweets(self, inputVariable, user, hashtag):
+    def start_liking(self):
+        '''
+        This method works in the inputed page determined in the next method (where_to_like()) and in that page, after a quick 
+        scroll, it detects all the like buttons and store's them in a list.
+        
+        Then it starts clicking each of them with the cooldown parameters established to control the number of likes and to make it
+        in the most natural way posible in order to avoid possible bans. 
+        
+        This is fully explained in the README file.
+        '''
+        bot = self.bot
+
+        ############################################# - Fit the parameters to your needs - ###############################################################
+
+        num_likes = 50 # Max. number of likes of each serie (Recommended: 50)
+        minutes = 5 # Cooldown between series of likes (Recommended: 5)
+        interval_min, interval_max = (6,18) # Min. and Max. number of seconds of a random interval - Cooldown between each like (Recommended: (6,18))
+
+        ##################################################################################################################################################
+        
+        count_likes = 0 # DO NOT CHANGE - Always has to be 0
+
+        time.sleep(3)
+        for i in range(1, 1000):
+            bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            time.sleep(2)
+            likeButton_list = bot.find_elements("xpath", '//div[@role="button" and @data-testid="like"]')             
+            print("Tweets to Like: (", (len(likeButton_list)), ")")
+            for likeButton in likeButton_list:
+                try:
+                    webdriver.ActionChains(bot).move_to_element(likeButton).click(likeButton).perform()
+                
+                    if count_likes <= (num_likes - 1):
+                        count_likes += 1
+                        print("You have " + str(count_likes) + " consecutive likes, " + str(num_likes - count_likes) + " left for the next break (" + str(minutes) + " min)")
+                        time.sleep(random.randint(interval_min,interval_max))
+
+                    if count_likes > (num_likes - 1):
+                        print("You have " + str(num_likes) +" consecutive likes, its time to stop (" + str(minutes) + " min)")
+                        time.sleep(minutes*60)
+                        count_likes = 0
+                except StaleElementReferenceException:
+                    continue
+
+    def where_to_like(self, inputVariable, user, hashtag):
         '''
         This method firstly reject the cookies pop-up to avoid future click problems, then there are two options:
 
-        - If the command was "username", it search's the user inputed profile page.
-        - If the command was "hashtag", it search the inputed hashtag page.
-        
-        After a quick scroll in that page it detects all the tweets and store them in a list, then it start's liking each of 
-        them with the cooldown parameters established to make it in the most natural way posible in order to avoid possible bans.
-        This is fully explained in the github documentation.
-        '''
+        - If the command was "username", it goes to the user inputed profile page to start the liking process explained in
+        the previous method (start_liking())
 
+        - If the command was "hashtag", it goes to the inputed hashtag page to start the liking process explained in
+        the previous method (start_liking())
+        '''
         bot = self.bot
 
         RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
         RejectCookies.click()
 
         if inputVariable == "username":
-
             bot.get("https://twitter.com/" + user)
+            self.start_liking()
 
         if inputVariable == "hashtag":
-
             bot.get("https://twitter.com/search?q=" + hashtag + "&src=typed_query")
+            self.start_liking()
 
-        time.sleep(3)
-        for i in range(1, 3):
-            bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-            time.sleep(2)
-
-        tweets = bot.find_elements("xpath", '//a[@dir="auto" and not(@rel)]')
-        tweets_url = [tweet.get_attribute('href') for tweet in tweets]
-        print("Tweets to like: (", (len(tweets_url) - 3), ")",  tweets_url)
-
-        for url in tweets_url:
-        
-            bot.get(url)
-            try:
-                time.sleep(1)
-                if url == 'https://twitter.com/i/keyboard_shortcuts':
-                    continue
-                    
-                if url== "https://twitter.com/" + user + "/following":
-                    continue
-                
-                if url== "https://twitter.com/" + user + "/followers":
-                    continue
-                 
-                else:
-                    time.sleep(2)
-                    likeButton = bot.find_element("xpath", '//div[@data-testid="like"]')   
-                    webdriver.ActionChains(bot).move_to_element(likeButton).click(likeButton).perform()
-                    time.sleep(random.randint(15,20))
-
-            except Exception as ex:
-                print("Exception: ", ex)
-                print(url + " is already liked")
-                time.sleep(random.randint(2,5))
-
-            time.sleep(2)
-
-
-UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
+UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
 UserParameters.login()
-UserParameters.likeTweets(inputVariable, user, hashtag)
+UserParameters.where_to_like(inputVariable, user, hashtag)
