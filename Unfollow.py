@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import NoSuchElementException             
 import time
 import random
 
@@ -13,7 +13,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/Twitterbot/chromedriver.exe') # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
 
     def login(self):
         '''
@@ -41,11 +41,20 @@ class TwitterBot:
         "following page". After a quick scroll in that page detects all the usernames and store them in a list that will
         later be the index from wich unfollow each of them.
 
-        The method also has a counter to control the number of unfollows and a random interval of seconds to make it in the most 
-        natural way posible in order to avoid possible bans. This is fully explained in the github documentation.
+        Then it starts unfollowing each of them with the cooldown parameters established to control the number of follows and to make
+        it in the most natural way posible in order to avoid possible bans. This is fully explained in the README file.
         '''
-
         bot = self.bot
+
+        ############################################# - Fit the parameters to your needs - ###############################################################
+
+        num_unfollows = 20 # Max. number of unfollows of each serie (Recommended: 20)
+        minutes = 10 # Cooldown between series of unfollows (Recommended: 10)
+        interval_min, interval_max = (6,18) # Min. and Max. number of seconds of a random interval - Cooldown between each unfollow (Recommended: (6,18))
+
+        ##################################################################################################################################################
+        
+        count_unfollows = 0 # DO NOT CHANGE - Always has to be 0
 
         RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
         RejectCookies.click()
@@ -55,45 +64,47 @@ class TwitterBot:
         bot.get("https://twitter.com/"+ username + "/following")
         time.sleep(3)
 
-        usernames_detected = bot.find_elements("xpath", '//a[@role="link" and @aria-hidden="true"]')
-        usernames_list = [arroba.get_attribute('href') for arroba in usernames_detected]
+        for k in range(1, 1000):
+                bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+                time.sleep(5)
 
-        cleaned_usernames_list = []
-        for arroba in usernames_list:
-            arroba = "@" + arroba.split("/")[3]
-            cleaned_usernames_list.append(arroba)
-        
-        print("Lista de @ detectados (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
+                usernames_detected = bot.find_elements("xpath", '//a[@role="link" and @aria-hidden="true"]')
+                usernames_list = [arroba.get_attribute('href') for arroba in usernames_detected]
 
-        count_unfollows = 0
+                cleaned_usernames_list = []
+                for arroba in usernames_list[0:15]:
+                    arroba = "@" + arroba.split("/")[3]
+                    cleaned_usernames_list.append(arroba)
 
-        for n in cleaned_usernames_list:
+                print("List of '@' detected (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
+
+                for n in cleaned_usernames_list:
                    
-            time.sleep(2)
-            try:
-                unfollow_button = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
-                webdriver.ActionChains(bot).move_to_element(unfollow_button).click(unfollow_button).perform()
-                time.sleep(1)
-                unfollows_button_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
-                unfollows_button_confirm.click()
-                print("You have unfollowed ", n)
-                time.sleep(2)
+                    time.sleep(2)
+                    try:
+                        unfollows_b = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
+                        webdriver.ActionChains(bot).move_to_element(unfollows_b).click(unfollows_b).perform()
+                        time.sleep(1)
+                        unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
+                        unfollows_b_confirm.click()
+                        print("You have unfollowed ", n)
+                        time.sleep(2)
 
-                if count_unfollows <= (20 - 1):
-                    count_unfollows += 1
-                    print("You have " + str(count_unfollows) + " consecutive unfollows, " 
-                        + str(20 - count_unfollows) + " left for the next break (20 min)")
-                    time.sleep(random.randint(6,30))
+                        if count_unfollows <= (num_unfollows - 1):
+                            count_unfollows += 1
+                            print("You have " + str(count_unfollows) + " consecutive follows, " + str(num_unfollows - count_unfollows)
+                             + " left for the next break (" + str(minutes) + " min)")
+                            time.sleep(random.randint(interval_min, interval_max))
 
 
-                if count_unfollows > (20 - 1):
-                    print("You have 20 consecutive unfollows, its time to stop (20 min)")
-                    count_unfollows = 0
-                    time.sleep(10*60)
+                        if count_unfollows > (num_unfollows - 1):
+                            print("You have " + str(num_unfollows) + " consecutive follows, its time to stop (" + str(minutes) + " min)")
+                            time.sleep(minutes*60)
+                            count_unfollows = 0
 
-            except NoSuchElementException:
-                continue
+                    except NoSuchElementException:
+                        continue
                 
-UserParameters = TwitterBot('Probando2847', 'Hello01134') # Your ('username', 'password')
+UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
 UserParameters.login()
-UserParameters.unfollow('Probando2847') # Your ('username')
+UserParameters.unfollow('YourUsername') # Your ('username')
