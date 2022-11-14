@@ -49,7 +49,7 @@ We can introduce a username (ex. 'elonmusk') so that the bot goes directly to hi
 > **Note**
 > *Obiusly the UnfollowScript only can use as input your own username*
 
-## Here I leave you 4 youtube videos to exemplify the operation of each script:
+## Here you have 4 YT videos to exemplify the operation of each script:
 ### - [TwitterBot to FOLLOW automatically without API]()
 ### - [TwitterBot to UNFOLLOW automatically without API]()
 ### - [TwitterBot to RETWEET automatically without API]()
