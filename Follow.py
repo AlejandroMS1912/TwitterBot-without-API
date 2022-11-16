@@ -71,6 +71,7 @@ class TwitterBot:
         ##################################################################################################################################################
         
         count_follows = 0 # DO NOT CHANGE - Always has to be 0
+        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
 
         for k in range(1, 1000):
                 bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
@@ -96,17 +97,19 @@ class TwitterBot:
                 
                         time.sleep(2)
 
-                        if count_follows <= (num_follows - 1):
+                        if count_cooldown <= (num_follows - 1):
+                            count_cooldown += 1
                             count_follows += 1
-                            print("You have " + str(count_follows) + " consecutive follows, " + str(num_follows - count_follows)
-                             + " left for the next break (" + str(minutes) + " min)")
+                            print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
+                             + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in all.\n")
                             time.sleep(random.randint(interval_min,interval_max))
 
 
-                        if count_follows > (num_follows - 1):
-                            print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min)")
+                        if count_cooldown > (num_follows - 1):
+                            print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min). " 
+                                  + str(count_follows) + " in all.\n\n")
                             time.sleep(minutes*60)
-                            count_follows = 0
+                            count_cooldown = 0
 
                     except NoSuchElementException:
                         continue
