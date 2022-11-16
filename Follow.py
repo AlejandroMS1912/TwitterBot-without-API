@@ -94,22 +94,20 @@ class TwitterBot:
                         follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
                         webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
                         print("You have followed ", n)
-                
+                        count_cooldown += 1
+                        count_follows += 1
                         time.sleep(2)
 
-                        if count_cooldown <= (num_follows - 1):
-                            count_cooldown += 1
-                            count_follows += 1
-                            print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
-                             + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in total.\n")
-                            time.sleep(random.randint(interval_min,interval_max))
-
-
-                        if count_cooldown > (num_follows - 1):
+                        if count_cooldown >= (num_follows):
                             print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min). " 
                                   + str(count_follows) + " in total.\n\n")
                             time.sleep(minutes*60)
                             count_cooldown = 0
+
+                        if count_cooldown < (num_follows):                    
+                            print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
+                             + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in total.\n")
+                            time.sleep(random.randint(interval_min,interval_max))
 
                     except NoSuchElementException:
                         continue
