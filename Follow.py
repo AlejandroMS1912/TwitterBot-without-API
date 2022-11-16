@@ -101,13 +101,13 @@ class TwitterBot:
                             count_cooldown += 1
                             count_follows += 1
                             print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
-                             + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in all.\n")
+                             + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in total.\n")
                             time.sleep(random.randint(interval_min,interval_max))
 
 
                         if count_cooldown > (num_follows - 1):
                             print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min). " 
-                                  + str(count_follows) + " in all.\n\n")
+                                  + str(count_follows) + " in total.\n\n")
                             time.sleep(minutes*60)
                             count_cooldown = 0
 
