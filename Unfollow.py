@@ -89,21 +89,21 @@ class TwitterBot:
                         unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
                         unfollows_b_confirm.click()
                         print("You have unfollowed ", n)
+                        count_unfollows += 1
+                        count_cooldown += 1
                         time.sleep(2)
 
-                        if count_cooldown <= (num_unfollows - 1):
-                            count_cooldown += 1
-                            count_unfollows += 1
-                            print("You have " + str(count_cooldown) + " consecutive unfollows, " + str(num_unfollows - count_cooldown)
-                             + " left for the next break (" + str(minutes) + " min). " + str(count_unfollows) + " in total.\n")
-                            time.sleep(random.randint(interval_min, interval_max))
-
-
-                        if count_cooldown > (num_unfollows - 1):
-                            print("You have " + str(num_unfollows) + " unconsecutive follows, its time to stop (" + str(minutes) 
+                        if count_cooldown >= (num_unfollows):
+                            print("You have " + str(num_unfollows) + " consecutive unfollows, its time to stop (" + str(minutes) 
                                   + " min). " + str(count_unfollows) + " in total.\n")
                             time.sleep(minutes*60)
                             count_cooldown = 0
+
+
+                        if count_cooldown < (num_unfollows):
+                            print("You have " + str(count_cooldown) + " consecutive unfollows, " + str(num_unfollows - count_cooldown)
+                             + " left for the next break (" + str(minutes) + " min). " + str(count_unfollows) + " in total.\n")
+                            time.sleep(random.randint(interval_min, interval_max))
 
                     except NoSuchElementException:
                         continue
