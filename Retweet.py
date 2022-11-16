@@ -86,22 +86,23 @@ class TwitterBot:
                     time.sleep(2)
                     rtButtonConfirm = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
                     webdriver.ActionChains(bot).move_to_element(rtButtonConfirm).click(rtButtonConfirm).perform()
+                    print("Tweet succesfully retweeted.")
+                    count_cooldown += 1
+                    count_retweets += 1
 
-                    if count_cooldown <= (num_RTs - 1):
-                        count_cooldown += 1
-                        count_retweets += 1
-                        print("You have " + str(count_cooldown) + " consecutive retweets, " + str(num_RTs - count_cooldown) + " left for the next break (" 
-                              + str(minutes) + " min). " + str(count_retweets) + " in total.\n")
-                        time.sleep(random.randint(interval_min,interval_max))
-
-                    if count_cooldown > (num_RTs - 1):
+                    if count_cooldown > (num_RTs):
                         print("You have " + str(num_RTs) +" consecutive retweets, its time to stop (" + str(minutes) + " min). " 
                               + str(count_retweets) + " in total.\n\n")
                         time.sleep(minutes*60)
                         count_cooldown = 0
+
+                    if count_cooldown <= (num_RTs):
+                        print("You have " + str(count_cooldown) + " consecutive retweets, " + str(num_RTs - count_cooldown) + " left for the next break (" 
+                              + str(minutes) + " min). " + str(count_retweets) + " in total.\n")
+                        time.sleep(random.randint(interval_min,interval_max))
+
                 except StaleElementReferenceException:
                     continue
-
 
     def where_to_RT(self, inputVariable, user, hashtag):
         '''
