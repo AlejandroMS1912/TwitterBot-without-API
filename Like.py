@@ -83,17 +83,17 @@ class TwitterBot:
             for likeButton in likeButton_list:
                 try:
                     webdriver.ActionChains(bot).move_to_element(likeButton).click(likeButton).perform()
-                    print("Tweet successfully liked")
+                    print("Tweet successfully liked.")
                     count_cooldown += 1
                     count_likes += 1
                     
-                    if count_cooldown > (num_likes - 1):
+                    if count_cooldown >= (num_likes):
                         print("You have " + str(num_likes) +" consecutive likes, its time to stop (" + str(minutes) + " min). " 
                         + str(count_likes) + " in total.\n\n")
                         time.sleep(minutes*60)
                         count_cooldown = 0
 
-                    if count_cooldown <= (num_likes - 1):
+                    if count_cooldown < (num_likes):
                         print("You have " + str(count_cooldown) + " consecutive likes, " + str(num_likes - count_cooldown) + " left for the next break (" + str(minutes)
                               + " min). " + str(count_likes) + " in total.\n")
                         time.sleep(random.randint(interval_min,interval_max))
