@@ -72,6 +72,7 @@ class TwitterBot:
         ##################################################################################################################################################
         
         count_retweets = 0 # DO NOT CHANGE - Always has to be 0
+        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
 
         time.sleep(3)
         for i in range(1, 1000):
@@ -86,15 +87,18 @@ class TwitterBot:
                     rtButtonConfirm = bot.find_element("xpath", '//div[@data-testid="retweetConfirm"]')   
                     webdriver.ActionChains(bot).move_to_element(rtButtonConfirm).click(rtButtonConfirm).perform()
 
-                    if count_retweets <= (num_RTs - 1):
+                    if count_cooldown <= (num_RTs - 1):
+                        count_cooldown += 1
                         count_retweets += 1
-                        print("You have " + str(count_retweets) + " consecutive retweets, " + str(num_RTs - count_retweets) + " left for the next break (" + str(minutes) + " min)")
+                        print("You have " + str(count_cooldown) + " consecutive retweets, " + str(num_RTs - count_cooldown) + " left for the next break (" 
+                              + str(minutes) + " min). " + str(count_retweets) + " in total.\n")
                         time.sleep(random.randint(interval_min,interval_max))
 
-                    if count_retweets > (num_RTs - 1):
-                        print("You have " + str(num_RTs) +" consecutive retweets, its time to stop (" + str(minutes) + " min)")
+                    if count_cooldown > (num_RTs - 1):
+                        print("You have " + str(num_RTs) +" consecutive retweets, its time to stop (" + str(minutes) + " min). " 
+                              + str(count_retweets) + " in total.\n\n")
                         time.sleep(minutes*60)
-                        count_retweets = 0
+                        count_cooldown = 0
                 except StaleElementReferenceException:
                     continue
 
