@@ -50,10 +50,10 @@ We can introduce a username (ex. 'elonmusk') so that the bot goes directly to hi
 > *Obiusly the UnfollowScript only can use as input your own username*
 
 ## Here you have 4 YT videos to exemplify the operation of each script:
-### - [TwitterBot to FOLLOW automatically without API]()
-### - [TwitterBot to UNFOLLOW automatically without API]()
-### - [TwitterBot to RETWEET automatically without API]()
-### - [TwitterBot to LIKE tweets automatically without API]()
+### - [TwitterBot to FOLLOW automatically without API](https://www.youtube.com/watch?v=nc2t4aSK0rU&t=0s)
+### - [TwitterBot to UNFOLLOW automatically without API](https://www.youtube.com/watch?v=gcVIfo9Z_6o&t=0s)
+### - [TwitterBot to RETWEET automatically without API](https://www.youtube.com/watch?v=1Cyi6Zy5CQ4&t=0s)
+### - [TwitterBot to LIKE tweets automatically without API](https://www.youtube.com/watch?v=XoR1Ak_FxAA&t=0s)
 
 
 ## How to avoid Twitter bans?
