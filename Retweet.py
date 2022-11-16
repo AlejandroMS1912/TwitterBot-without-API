@@ -90,13 +90,13 @@ class TwitterBot:
                     count_cooldown += 1
                     count_retweets += 1
 
-                    if count_cooldown > (num_RTs):
+                    if count_cooldown >= (num_RTs):
                         print("You have " + str(num_RTs) +" consecutive retweets, its time to stop (" + str(minutes) + " min). " 
                               + str(count_retweets) + " in total.\n\n")
                         time.sleep(minutes*60)
                         count_cooldown = 0
 
-                    if count_cooldown <= (num_RTs):
+                    if count_cooldown < (num_RTs):
                         print("You have " + str(count_cooldown) + " consecutive retweets, " + str(num_RTs - count_cooldown) + " left for the next break (" 
                               + str(minutes) + " min). " + str(count_retweets) + " in total.\n")
                         time.sleep(random.randint(interval_min,interval_max))
