@@ -72,6 +72,7 @@ class TwitterBot:
         ##################################################################################################################################################
         
         count_likes = 0 # DO NOT CHANGE - Always has to be 0
+        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
 
         time.sleep(3)
         for i in range(1, 1000):
@@ -83,15 +84,17 @@ class TwitterBot:
                 try:
                     webdriver.ActionChains(bot).move_to_element(likeButton).click(likeButton).perform()
                 
-                    if count_likes <= (num_likes - 1):
+                    if count_cooldown <= (num_likes - 1):
+                        count_cooldown += 1
                         count_likes += 1
-                        print("You have " + str(count_likes) + " consecutive likes, " + str(num_likes - count_likes) + " left for the next break (" + str(minutes) + " min)")
+                        print("You have " + str(count_cooldown) + " consecutive likes, " + str(num_likes - count_cooldown) + " left for the next break (" + str(minutes)
+                              + " min). " + str(count_likes) + " in total.\n")
                         time.sleep(random.randint(interval_min,interval_max))
 
-                    if count_likes > (num_likes - 1):
-                        print("You have " + str(num_likes) +" consecutive likes, its time to stop (" + str(minutes) + " min)")
+                    if count_cooldown > (num_likes - 1):
+                        print("You have " + str(num_likes) +" consecutive likes, its time to stop (" + str(minutes) + " min). " + str(count_likes) + " in total.\n\n")
                         time.sleep(minutes*60)
-                        count_likes = 0
+                        count_cooldown = 0
                 except StaleElementReferenceException:
                     continue
 
