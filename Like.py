@@ -2,6 +2,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import StaleElementReferenceException
+from selenium.common.exceptions import NoSuchElementException             
 import time
 import random
 
@@ -48,6 +49,7 @@ class TwitterBot:
 
         password = bot.find_element("xpath", '//input[@name="password"]')
         password.send_keys(self.password)
+        time.sleep(3)
         password.send_keys(Keys.RETURN)
         time.sleep(3)
 
@@ -113,8 +115,12 @@ class TwitterBot:
         '''
         bot = self.bot
 
-        RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
-        RejectCookies.click()
+        try:
+            RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
+            webdriver.ActionChains(bot).move_to_element(RejectCookies).click(RejectCookies).perform()
+
+        except NoSuchElementException:
+            pass
 
         if inputVariable == "username":
             bot.get("https://twitter.com/" + user)
