@@ -47,6 +47,7 @@ class TwitterBot:
 
         password = bot.find_element("xpath", '//input[@name="password"]')
         password.send_keys(self.password)
+        time.sleep(4)
         password.send_keys(Keys.RETURN)
         time.sleep(4)
 
@@ -124,9 +125,13 @@ class TwitterBot:
         to start the following process explained in the previous method (start_following()).
         '''
         bot = self.bot
+        
+        try:
+            RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
+            webdriver.ActionChains(bot).move_to_element(RejectCookies).click(RejectCookies).perform()
 
-        RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
-        RejectCookies.click()
+        except NoSuchElementException:
+            pass
         
         if inputVariable == "username":
 
