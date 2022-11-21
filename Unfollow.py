@@ -32,6 +32,7 @@ class TwitterBot:
 
         password = bot.find_element("xpath", '//input[@name="password"]')
         password.send_keys(self.password)
+        time.sleep(3)
         password.send_keys(Keys.RETURN)
         time.sleep(3)
 
@@ -57,8 +58,12 @@ class TwitterBot:
         count_unfollows = 0 # DO NOT CHANGE - Always has to be 0
         count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
 
-        RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
-        RejectCookies.click()
+        try:
+            RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
+            webdriver.ActionChains(bot).move_to_element(RejectCookies).click(RejectCookies).perform()
+
+        except NoSuchElementException:
+            pass
         
         bot.get("https://twitter.com/"+ username)
         time.sleep(3)
@@ -107,6 +112,7 @@ class TwitterBot:
 
                     except NoSuchElementException:
                         continue
+                
                 
 UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
 UserParameters.login()
