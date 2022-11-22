@@ -84,3 +84,10 @@ It seems that there is not any limit for liking tweets
 In resume, this bot uses an inputed hashtag or username as an index to execute the ordered action (Follow, unfollow, like or retweet) using random and customizable time intervals to avoid the Twitter's ban systems. This is very useful because you can get interactions back from your target keyword.
 
 The fact of not using the Twitter API makes the bot's actions much more difficult to detect for the application's tracking systems.
+
+## Future Projects
+
+This is just a tiny sample of what could be achieved by following this working method. In this repository I have shown how to develop the basic functions of Twitter as a starting point but there is a universe of possibilities beyond this.
+- If you have a custom phone cases shop, for example, I could make a script that replies with a custom text (even with a link to your shop) to every person who has ever tweeted "phone case". Or interact with each tweet published by the main mobile phone brands. Or block anyone who interacts with you with she/her listed on their bio... the possibilities are endless
+- I could also do something similar on any other social network like Instagram, Facebook, Reddit, TikTok... (with a few of time to understand its html structure)
+If you are interested in something like this, I'm here to help with whatever is needed
