@@ -10,17 +10,17 @@ A few of scripts that use an inputed hashtag or username as an index to execute 
 ### - Twitter account
 [Create a new account](https://twitter.com/i/flow/signup) or use your own
 ### - [Python](https://www.python.org/)
-### - Selenium-python library
+### - [Selenium-python library](https://pypi.org/project/selenium/)
 ```
 pip install selenium
 ```
-### - Python-time library
+### - [Python-time library](https://pypi.org/project/python-time/)
 ```
 pip install python-time
 ```
-### - Random-python library
+### - [Random-python library](https://pypi.org/project/random2/)
 ```
-pip install random
+pip install random2
 ```
 ### - [Chrome driver](https://chromedriver.chromium.org/downloads)
 - Check your Chrome version
