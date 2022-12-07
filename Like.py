@@ -24,13 +24,16 @@ if inputVariable == "hashtag":
 #####################################################################################################################################
 
 class TwitterBot:
-    def __init__(self, username, password):
+    def __init__(self, username, password, inputVariable, hashtag, user):
         '''
         This method asign the username and the password parameters inputs in the driver that will be used in the following methods
         '''
         self.username = username
         self.password = password
         self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
+        self.inputVariable = inputVariable
+        self.hashtag = hashtag
+        self.user = user
 
     def login(self):
         '''
@@ -73,12 +76,14 @@ class TwitterBot:
 
         ##################################################################################################################################################
         
-        count_likes = 0 # DO NOT CHANGE - Always has to be 0
-        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
+        count_likes = 0 # DO NOT CHANGE
+        count_cooldown = 0 # DO NOT CHANGE
+        count_scrolls = 0 # DO NOT CHANGE
 
         time.sleep(3)
         for i in range(1, 1000):
-            bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+            if count_scrolls > 0:
+                bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
             time.sleep(2)
             likeButton_list = bot.find_elements("xpath", '//div[@role="button" and @data-testid="like"]')             
             print("Tweets to Like: (", (len(likeButton_list)), ")")
@@ -102,6 +107,8 @@ class TwitterBot:
 
                 except StaleElementReferenceException:
                     continue
+
+            count_scrolls += 1
 
     def where_to_like(self, inputVariable, user, hashtag):
         '''
@@ -130,6 +137,6 @@ class TwitterBot:
             bot.get("https://twitter.com/search?q=" + hashtag + "&src=typed_query")
             self.start_liking()
 
-UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
+UserParameters = TwitterBot('YourUsername', 'YourPassword', inputVariable, hashtag, user) # Type your username and password
 UserParameters.login()
-UserParameters.where_to_like(inputVariable, user, hashtag)
+UserParameters.where_to_like()
