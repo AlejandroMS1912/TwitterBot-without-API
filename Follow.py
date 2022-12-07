@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException             
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException           
 import time
 import random
 
@@ -23,13 +24,17 @@ if inputVariable == "hashtag":
 #####################################################################################################################################
 
 class TwitterBot:
-    def __init__(self, username, password):
+    def __init__(self, username, password, inputVariable, user, hashtag):
         '''
         This method asign the username and the password parameters inputs in the driver that will be used in the following methods
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(executable_path='HERE') # Copy YOUR chromedriver path
+        self.inputvariable = inputVariable
+        self.user = user
+        self.hashtag = hashtag
+        
     def login(self):
         '''
         In this method firstly the driver searchs the login page of twitter, then detects the user and the password boxes and clean
@@ -71,49 +76,71 @@ class TwitterBot:
 
         ##################################################################################################################################################
         
-        count_follows = 0 # DO NOT CHANGE - Always has to be 0
-        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
+        count_follows = 0 # DO NOT CHANGE 
+        count_cooldown = 0 # DO NOT CHANGE 
+        count_scrolls = 0 # DO NOT CHANGE 
+        memory = [] # DO NOT CHANGE 
+        usernames_prelist = [] # DO NOT CHANGE
+        usernames_list = [] # DO NOT CHANGE
 
         for k in range(1, 1000):
+            if count_scrolls > 0:
                 bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
                 time.sleep(5)
-
+            try: 
                 usernames_detected = bot.find_elements("xpath", '//a[@role="link" and @aria-hidden="true"]')
-                usernames_list = [arroba.get_attribute('href') for arroba in usernames_detected]
+                usernames_prelist = [arroba.get_attribute('href') for arroba in usernames_detected]
+            except StaleElementReferenceException:
+                pass
 
-                cleaned_usernames_list = []
-                for arroba in usernames_list[0:15]:
-                    arroba = "@" + arroba.split("/")[3]
-                    cleaned_usernames_list.append(arroba)
+            if len(usernames_prelist) == 0:
+                print("Break")
+                break
 
-                print("List of '@' detected (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
+            for t in usernames_prelist:
+                if t not in memory:
+                    usernames_list.append(t)
+                    memory.append(t)
 
-                for n in cleaned_usernames_list:
+            print("Memory:", len(memory))
+
+            cleaned_usernames_list = []
+            for arroba in usernames_list:
+                arroba = "@" + arroba.split("/")[3]
+                cleaned_usernames_list.append(arroba)
+
+            print("List of '@' detected (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
+
+            for n in cleaned_usernames_list:
                    
+                time.sleep(2)
+                try:
+                    follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
+                    webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
+                    print("You have followed ", n)
+                    count_cooldown += 1
+                    count_follows += 1
                     time.sleep(2)
-                    try:
-                        follow_button = bot.find_element(By.XPATH, "//div[@aria-label='Follow " + n + "']")
-                        webdriver.ActionChains(bot).move_to_element(follow_button).click(follow_button).perform()
-                        print("You have followed ", n)
-                        count_cooldown += 1
-                        count_follows += 1
-                        time.sleep(2)
 
-                        if count_cooldown >= (num_follows):
-                            print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min). " 
-                                  + str(count_follows) + " in total.\n\n")
-                            time.sleep(minutes*60)
-                            count_cooldown = 0
+                    if count_cooldown >= (num_follows):
+                        print("\n-------------------------------------------------------")
+                        print("You have " + str(num_follows) + " consecutive follows, its time to stop (" + str(minutes) + " min). " 
+                                  + str(count_follows) + " follows in total.")
+                        print("-------------------------------------------------------\n")
+                        time.sleep(minutes*60)
+                        count_cooldown = 0
 
-                        if count_cooldown < (num_follows):                    
-                            print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
+                    if count_cooldown < (num_follows):                    
+                        print("You have " + str(count_cooldown) + " consecutive follows, " + str(num_follows - count_cooldown)
                              + " left for the next break (" + str(minutes) + " min). " + str(count_follows) + " in total.\n")
-                            time.sleep(random.randint(interval_min,interval_max))
+                        time.sleep(random.randint(interval_min,interval_max))
 
-                    except NoSuchElementException:
-                        continue
+                except NoSuchElementException:
+                    continue
 
-    def where_to_follow(self, inputVariable, user, hashtag):
+            count_scrolls += 1
+
+    def where_to_follow(self):
         '''
         This method firstly reject the cookies pop-up to avoid future click problems, then there are two options:
 
@@ -125,6 +152,7 @@ class TwitterBot:
         to start the following process explained in the previous method (start_following()).
         '''
         bot = self.bot
+        count_scrolls = 0
         
         try:
             RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
@@ -147,10 +175,18 @@ class TwitterBot:
             bot.get("https://twitter.com/search?q=" + hashtag + "&src=typed_query")
             time.sleep(3)
             for i in range(1, 1000):
-                bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(2)
+                if count_scrolls == 0:
+                    time.sleep(random.uniform(2 - 0.5, 2 + 0.5))
+                    bot.execute_script('window.scrollTo(0,document.body.scrollHeight/3)')
+                    time.sleep(random.uniform(2 - 0.5, 2 + 0.5))
+                    time.sleep(3)
+                if count_scrolls > 0:
+                    time.sleep(random.uniform(2 - 0.5, 2 + 0.5))
+                    bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
+                    time.sleep(random.uniform(2 - 0.5, 2 + 0.5))
+                    time.sleep(3)
 
-                tweets = bot.find_elements("xpath", '//a[@dir="auto" and not(@rel)]')
+                tweets = bot.find_elements("xpath", '//a[@dir="ltr" and @role="link"]')
                 tweets_url = [tweet.get_attribute('href') for tweet in tweets]
 
                 for url in tweets_url:
@@ -170,6 +206,8 @@ class TwitterBot:
                         time.sleep(4)
                         self.start_following()
 
-UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
+                count_scrolls += 1
+
+UserParameters = TwitterBot('YourUsername', 'YourPassword', inputVariable, user, hashtag) # Type your username and hashtag
 UserParameters.login()
-UserParameters.where_to_follow(inputVariable, user, hashtag)
+UserParameters.where_to_follow()
