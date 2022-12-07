@@ -5,7 +5,6 @@ from selenium.common.exceptions import NoSuchElementException
 import time
 import random
 
-
 class TwitterBot:
     def __init__(self, username, password):
         '''
@@ -36,7 +35,7 @@ class TwitterBot:
         password.send_keys(Keys.RETURN)
         time.sleep(3)
 
-    def unfollow(self, username):
+    def unfollow(self):
         '''
         This method firstly reject the cookies pop-up to avoid future click problems, then search your profile page and your 
         "following page". After a quick scroll in that page detects all the usernames and store them in a list that will
@@ -55,8 +54,9 @@ class TwitterBot:
 
         ##################################################################################################################################################
         
-        count_unfollows = 0 # DO NOT CHANGE - Always has to be 0
-        count_cooldown = 0 # DO NOT CHANGE - Always has to be 0
+        count_unfollows = 0 # DO NOT CHANGE
+        count_cooldown = 0 # DO NOT CHANGE
+        count_scrolls = 0 # DO NOT CHANGE 
 
         try:
             RejectCookies = bot.find_element("xpath", '//*[@id="layers"]/div/div/div/div/div/div[2]/div[2]/div/span/span')        
@@ -65,55 +65,58 @@ class TwitterBot:
         except NoSuchElementException:
             pass
         
-        bot.get("https://twitter.com/"+ username)
+        bot.get("https://twitter.com/"+ self.username)
         time.sleep(3)
-        bot.get("https://twitter.com/"+ username + "/following")
+        bot.get("https://twitter.com/"+ self.username + "/following")
         time.sleep(3)
 
         for k in range(1, 1000):
-                bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
-                time.sleep(5)
+            if count_scrolls > 0:
+                    bot.execute_script('window.scrollTo(0,document.body.scrollHeight)')
 
-                usernames_detected = bot.find_elements("xpath", '//a[@role="link" and @aria-hidden="true"]')
-                usernames_list = [arroba.get_attribute('href') for arroba in usernames_detected]
+            time.sleep(3)
+            usernames_detected = bot.find_elements("xpath", '//a[@role="link" and @aria-hidden="true"]')
+            usernames_list = [arroba.get_attribute('href') for arroba in usernames_detected]
 
-                cleaned_usernames_list = []
-                for arroba in usernames_list[0:15]:
-                    arroba = "@" + arroba.split("/")[3]
-                    cleaned_usernames_list.append(arroba)
+            cleaned_usernames_list = []
+            for arroba in usernames_list[0:15]:
+                arroba = "@" + arroba.split("/")[3]
+                cleaned_usernames_list.append(arroba)
 
-                print("List of '@' detected (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
+            print("List of '@' detected (", len(cleaned_usernames_list), "): ", cleaned_usernames_list)
 
-                for n in cleaned_usernames_list:
+            for n in cleaned_usernames_list:
                    
+                time.sleep(2)
+                try:
+                    unfollows_b = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
+                    webdriver.ActionChains(bot).move_to_element(unfollows_b).click(unfollows_b).perform()
+                    time.sleep(1)
+                    unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
+                    unfollows_b_confirm.click()
+                    print("You have unfollowed ", n)
+                    count_unfollows += 1
+                    count_cooldown += 1
                     time.sleep(2)
-                    try:
-                        unfollows_b = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
-                        webdriver.ActionChains(bot).move_to_element(unfollows_b).click(unfollows_b).perform()
-                        time.sleep(1)
-                        unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
-                        unfollows_b_confirm.click()
-                        print("You have unfollowed ", n)
-                        count_unfollows += 1
-                        count_cooldown += 1
-                        time.sleep(2)
 
-                        if count_cooldown >= (num_unfollows):
-                            print("You have " + str(num_unfollows) + " consecutive unfollows, its time to stop (" + str(minutes) 
-                                  + " min). " + str(count_unfollows) + " in total.\n")
-                            time.sleep(minutes*60)
-                            count_cooldown = 0
+                    if count_cooldown >= (num_unfollows):
+                        print("\n-------------------------------------------------------")
+                        print("You have " + str(num_unfollows) + " consecutive unfollows, its time to stop (" + str(minutes) 
+                                + " min). " + str(count_unfollows) + " in total.\n")
+                        print("-------------------------------------------------------\n")
+                        time.sleep(minutes*60)
+                        count_cooldown = 0
 
+                    if count_cooldown < (num_unfollows):
+                        print("You have " + str(count_cooldown) + " consecutive unfollows, " + str(num_unfollows - count_cooldown)
+                            + " left for the next break (" + str(minutes) + " min). " + str(count_unfollows) + " in total.\n")
+                        time.sleep(random.randint(interval_min, interval_max))
 
-                        if count_cooldown < (num_unfollows):
-                            print("You have " + str(count_cooldown) + " consecutive unfollows, " + str(num_unfollows - count_cooldown)
-                             + " left for the next break (" + str(minutes) + " min). " + str(count_unfollows) + " in total.\n")
-                            time.sleep(random.randint(interval_min, interval_max))
+                except NoSuchElementException:
+                    continue
 
-                    except NoSuchElementException:
-                        continue
+            count_scrolls += 1
                 
-                
-UserParameters = TwitterBot('YourUsername', 'YourPassword') # Your ('username', 'password')
+UserParameters = TwitterBot('YourUsername', 'YourPassword') # Type your username and password
 UserParameters.login()
-UserParameters.unfollow('YourUsername') # Your ('username')
+UserParameters.unfollow()
