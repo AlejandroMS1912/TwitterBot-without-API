@@ -30,7 +30,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='C:/Users/Usuario/Desktop/TwitterBot-without-API-main/chromedriver.exe') # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(executable_path='HERE') # Copy YOUR chromedriver path
         self.inputVariable = inputVariable
         self.hashtag = hashtag
         self.user = user
