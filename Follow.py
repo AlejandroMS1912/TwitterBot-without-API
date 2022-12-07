@@ -208,6 +208,6 @@ class TwitterBot:
 
                 count_scrolls += 1
 
-UserParameters = TwitterBot('YourUsername', 'YourPassword', inputVariable, user, hashtag) # Type your username and hashtag
+UserParameters = TwitterBot('YourUsername', 'YourPassword', inputVariable, user, hashtag) # Type your username and password
 UserParameters.login()
 UserParameters.where_to_follow()
