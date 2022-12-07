@@ -94,7 +94,6 @@ class TwitterBot:
                 pass
 
             if len(usernames_prelist) == 0:
-                print("Break")
                 break
 
             for t in usernames_prelist:
