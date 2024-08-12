@@ -1,7 +1,8 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException             
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.chrome.service import Service
 import time
 import random
 
@@ -12,7 +13,7 @@ class TwitterBot:
         '''
         self.username = username
         self.password = password
-        self.bot = webdriver.Chrome(executable_path='HERE') # Copy YOUR chromedriver path
+        self.bot = webdriver.Chrome(service=Service('HERE')) # Copy YOUR chromedriver path
 
     def login(self):
         '''
@@ -20,7 +21,7 @@ class TwitterBot:
         and fill them with the established parameters
         '''
         bot = self.bot
-        bot.get('https://twitter.com/login')
+        bot.get('https://x.com/login')
         time.sleep(3)
 
         email = bot.find_element("xpath", '//input[@autocomplete="username"]')
@@ -65,9 +66,9 @@ class TwitterBot:
         except NoSuchElementException:
             pass
         
-        bot.get("https://twitter.com/"+ self.username)
+        bot.get("https://x.com/"+ self.username)
         time.sleep(3)
-        bot.get("https://twitter.com/"+ self.username + "/following")
+        bot.get("https://x.com/"+ self.username + "/following")
         time.sleep(3)
 
         for k in range(1, 1000):
@@ -89,10 +90,10 @@ class TwitterBot:
                    
                 time.sleep(2)
                 try:
-                    unfollows_b = bot.find_element(By.XPATH, "//div[@aria-label='Following " + n + "']")
+                    unfollows_b = bot.find_element(By.XPATH, "//button[@aria-label='Following " + n + "']")
                     webdriver.ActionChains(bot).move_to_element(unfollows_b).click(unfollows_b).perform()
                     time.sleep(1)
-                    unfollows_b_confirm = bot.find_element(By.XPATH, '//*[@id="layers"]/div[2]/div/div/div/div/div/div[2]/div[2]/div[2]/div[1]/div')
+                    unfollows_b_confirm = bot.find_element(By.XPATH, '//button[@data-testid='confirmationSheetConfirm']')
                     unfollows_b_confirm.click()
                     print("You have unfollowed ", n)
                     count_unfollows += 1
